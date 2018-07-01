@@ -95,49 +95,55 @@ export default {
   name: 'AddRecipe',
   data() {
     return {
-      onSubmit: (e) => {
-        e.preventDefault();
-
-        // FIXME: close popover after submission
-        // this.$refs['add-recipe-popover'].$emit('close');
-
-        axios.post('https://vegapie-recipe-server.herokuapp.com/addRecipe', {
-          params: this.form,
-        })
-        .then((response) => {
-          this.$toasted.success(`success ${response.data}`, {
-            theme: 'bubble',
-            position: 'bottom-right',
-            duration: 5000,
-            action: {
-              text: 'Dismiss',
-              onClick: (evt, toastObject) => {
-                toastObject.goAway(0);
-              },
-            },
-          });
-        })
-        .catch((error) => {
-          this.$toasted.error(`failure ${error}`, {
-            theme: 'bubble',
-            position: 'bottom-right',
-            duration: 5000,
-            action: {
-              text: 'Dismiss',
-              onClick: (evt, toastObject) => {
-                toastObject.goAway(0);
-              },
-            },
-          });
-        });
-      },
-      onReset: (e) => {
-        e.preventDefault();
-        this.form = Object.assign({}, startingForm);
-      },
       form: Object.assign({}, startingForm),
       categoryOptions,
     };
+  },
+  methods: {
+    onSubmit(e) {
+      e.preventDefault();
+
+      // FIXME: close popover after submission
+      // this.$refs['add-recipe-popover'].$emit('close');
+
+      this.$store.default.commit('addRecipe', this.form);
+      // axios.post('http://localhost:8081/addRecipe', {
+      //   params: this.form,
+      // })
+      axios.post('https://vegapie-recipe-server.herokuapp.com/addRecipe', {
+        params: this.form,
+      })
+      .then((response) => {
+        this.$toasted.success(`success ${response.data}`, {
+          theme: 'bubble',
+          position: 'bottom-right',
+          duration: 5000,
+          action: {
+            text: 'Dismiss',
+            onClick: (evt, toastObject) => {
+              toastObject.goAway(0);
+            },
+          },
+        });
+      })
+      .catch((error) => {
+        this.$toasted.error(`failure ${error}`, {
+          theme: 'bubble',
+          position: 'bottom-right',
+          duration: 5000,
+          action: {
+            text: 'Dismiss',
+            onClick: (evt, toastObject) => {
+              toastObject.goAway(0);
+            },
+          },
+        });
+      });
+    },
+    onReset(e) {
+      e.preventDefault();
+      this.form = Object.assign({}, startingForm);
+    },
   },
 };
 </script>
